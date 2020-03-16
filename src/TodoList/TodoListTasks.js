@@ -1,5 +1,5 @@
 import React from "react";
-import TodoListTask from "./Components/TodoListTask";
+import TodoListTask from "../Components/TodoListTask";
 class TodoListTasks extends React.Component {
     render = () => {
         let taskElements = this.props.tasks.map(task=> {
