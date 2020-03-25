@@ -42,6 +42,11 @@ class App extends React.Component {
         });
     }
 
+    changeFilter = (newFilterValue) => {
+            this.setState({
+                filterValue : newFilterValue
+            })
+    }
 
     render = () => {
         return (
@@ -57,8 +62,27 @@ class App extends React.Component {
                             <button onClick={this.onAddTaskClick}>Add</button>
                         </div>
                     </div>
-                    <TodoListTasks tasks={this.state.tasks}/>
-                    <TodoListFooter filterValue={this.state.filterValue}/>
+                    <TodoListTasks tasks={this.state.tasks.filter ( (task) => {
+                        switch (this.state.filterValue){
+                            case  "All" : return true;
+                            case  "Completed" : return task.isDone ? true : false;
+                                // if (task.isDone === true) {
+                                //     return true;
+                                // } else {
+                                //     return false;
+                                // }
+                            case  "Active" : return task.isDone ? false : true;
+                                // if (task.isDone === true) {
+                                //     return false;
+                                // } else {
+                                //     return true;
+                                // }
+                            default:
+                                return true;
+                        }
+
+                    } ) }/>
+                    <TodoListFooter changeFilter={this.changeFilter} filterValue={this.state.filterValue}/>
 
                 </div>
             </div>
