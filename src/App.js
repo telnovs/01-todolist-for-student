@@ -5,17 +5,7 @@ import TodoListFooter from './TodoList/TodoListFooter.js';
 import TodoListHeader from './TodoList/TodoListHeader.js';
 
 class App extends React.Component {
-    // constructor(props) {
-    //     super(props);
 
-    //     setTimeout(() => {
-    //         let newTask = {title: "JS", isDone: false, priority: "hegh"};
-    //         let newTasks = [...this.state.tasks, newTask];
-    //         this.setState({
-    //             tasks: newTasks
-    //         });
-    //     }, 2000);
-    //  }
     newTaskTitleRef = React.createRef();
     state = {
         tasks: [
@@ -52,7 +42,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <div className="todoList">
-                    {/*<TodoListHeader/>*/}
+                    <TodoListHeader/>
                     <div className="TodoListHeader">
                         <h3 className="TodoListHeader__title">What to Learn</h3>
                         <div className="TodoListHeader-newTaskForm">
@@ -65,20 +55,9 @@ class App extends React.Component {
                     <TodoListTasks tasks={this.state.tasks.filter ( (task) => {
                         switch (this.state.filterValue){
                             case  "All" : return true;
-                            case  "Completed" : return task.isDone ? true : false;
-                                // if (task.isDone === true) {
-                                //     return true;
-                                // } else {
-                                //     return false;
-                                // }
-                            case  "Active" : return task.isDone ? false : true;
-                                // if (task.isDone === true) {
-                                //     return false;
-                                // } else {
-                                //     return true;
-                                // }
-                            default:
-                                return true;
+                            case  "Completed" : return task.isDone;
+                            case  "Active" : return !task.isDone;
+                            default : return true;
                         }
 
                     } ) }/>
