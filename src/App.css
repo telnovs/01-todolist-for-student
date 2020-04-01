@@ -11,10 +11,13 @@
   padding: 50px;
 }
 
-.todoList-task {
-
+.todoList-task.done {
+  opacity: 0.5;
 }
 .filter-active{
 
   background-color: lawngreen;
+}
+.error{
+  bloder-color : red;
 }

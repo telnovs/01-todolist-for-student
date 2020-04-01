@@ -6,63 +6,77 @@ import TodoListHeader from './TodoList/TodoListHeader.js';
 
 class App extends React.Component {
 
-    newTaskTitleRef = React.createRef();
+    constructor(props) {
+        super(props);
+    }
+
     state = {
         tasks: [
-            {title: "JS", isDone: false, priority: "hegh"},
+            {title: "JS", isDone: true, priority: "medium"},
             {title: "HTML", isDone: true, priority: "low"},
-            {title: "CSS", isDone: false, priority: "hegh"},
-            {title: "React", isDone: true, priority: "hegh"},
-            {title: "SaSS", isDone: false, priority: "medium"},
-            {title: "Redux", isDone: true, priority: "low"}
+            {title: "CSS", isDone: true, priority: "low"},
+            {title: "ReactJS", isDone: false, priority: "high"},
+            {title: "Bootstrap", isDone: false, priority: "medium"},
         ],
-        filterValue: "Completed"
-    }
-    onAddTaskClick = () => {
-        let newTitle = this.newTaskTitleRef.current.value;
-        this.newTaskTitleRef.current.value = "";
+        filterValue: "All"
+    };
+
+    onTaskAdded = (newText) => {
         let newTask = {
-            title: newTitle,
+            title: newText,
             isDone: false,
-            priority: "hegh"
+            priority: "low"
         };
         let newTasks = [...this.state.tasks, newTask];
-        this.setState({
+        this.setState( {
             tasks: newTasks
         });
-    }
+    };
 
-    changeFilter = (newFilterValue) => {
-            this.setState({
-                filterValue : newFilterValue
-            })
-    }
+    onFilterChanged = (newFilterValue) => {
+        this.setState( {
+            filterValue: newFilterValue
+        });
+    };
+
+    onTaskStatusChanged = (task, isDone) => {
+        // создадим с помощью map новый массив, в котором все остальные таски будут сидеть такие же,
+        // а вот та, которую нужно изменить, будет другой: вернём копию таски с изменённым сво-вом
+        let newTasks = this.state.tasks.map(t => {
+            if (t !== task) {
+                return t; //возвращаем таску без изменения, если это не та таска, которую нужно поменять
+            }
+            else {
+                // делаем копию таски и сразу перезатираем в ней сво-во isDone новым значением
+                return {...t, isDone: isDone};
+            }
+        });
+        // а уже получив новый массив, изменяем этот массив в state с помощью setState
+        this.setState({
+            tasks: newTasks
+        })
+
+    };
 
     render = () => {
+
         return (
             <div className="App">
                 <div className="todoList">
-                    <TodoListHeader/>
-                    <div className="TodoListHeader">
-                        <h3 className="TodoListHeader__title">What to Learn</h3>
-                        <div className="TodoListHeader-newTaskForm">
-                            <input
-                                ref={this.newTaskTitleRef}
-                                type="text" placeholder="New task name"/>
-                            <button onClick={this.onAddTaskClick}>Add</button>
-                        </div>
-                    </div>
-                    <TodoListTasks tasks={this.state.tasks.filter ( (task) => {
-                        switch (this.state.filterValue){
-                            case  "All" : return true;
-                            case  "Completed" : return task.isDone;
-                            case  "Active" : return !task.isDone;
-                            default : return true;
-                        }
-
-                    } ) }/>
-                    <TodoListFooter changeFilter={this.changeFilter} filterValue={this.state.filterValue}/>
-
+                    <TodoListHeader onTaskAdded={this.onTaskAdded} />
+                    <TodoListTasks onTaskStatusChanged={this.onTaskStatusChanged }
+                                   tasks={this.state.tasks.filter(t => {
+                                       if (this.state.filterValue === "All") {
+                                           return true;
+                                       }
+                                       if (this.state.filterValue === "Active") {
+                                           return t.isDone === false;
+                                       }
+                                       if (this.state.filterValue === "Completed") {
+                                           return t.isDone === true;
+                                       }
+                                   })}/>
+                    <TodoListFooter onFilterChanged={this.onFilterChanged} filterValue={this.state.filterValue} />
                 </div>
             </div>
         );
@@ -70,4 +84,5 @@ class App extends React.Component {
 }
 
 export default App;
+
 
